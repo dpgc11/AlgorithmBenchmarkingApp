@@ -2,6 +2,7 @@ package com.example.android.algorithmbenchmarking;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -34,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mStartOverBtn;
 
     private int size;
-    private int[] array;
+    private int[] mArray;
+    private int[] mDupArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         mGeneratedArrayTextView = (TextView) findViewById(R.id.tvAlgorithmCase);
 
-        mBubbleSortBtn = (Button) findViewById(R.id.btnBestCase);
+        mBubbleSortBtn = (Button) findViewById(R.id.btnBubbleSort);
         mSelectionSortBtn = (Button) findViewById(R.id.btnSelectionSort);
         mInsertionSortBtn = (Button) findViewById(R.id.btnInsertionSort);
         mMergeSortBtn = (Button) findViewById(R.id.btnMergeSort);
@@ -58,9 +60,16 @@ public class MainActivity extends AppCompatActivity {
         mBenchmarkAllBtn = (Button) findViewById(R.id.btnBenchmarkAll);
         mStartOverBtn = (Button) findViewById(R.id.btnStartOver);
 
+        mBubbleSortTextView = (TextView) findViewById(R.id.tvBubbleSortTime);
+        mSelectionSortTextView = (TextView) findViewById(R.id.tvSelectionSortTime);
+        mInsertionSortTextView = (TextView) findViewById(R.id.tvInsertionSortTime);
+        mMergeSortTextView = (TextView) findViewById(R.id.tvMergeSortTime);
+        mQuickSortTextView = (TextView) findViewById(R.id.tvQuickSortTime);
+
         size = 0;
 
         getAlgorithmCase();
+        assignListeners();
     }
 
     public void getAlgorithmCase() {
@@ -70,50 +79,147 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int id) {
                 switch (id) {
                     case R.id.btnBestCase:
-
-                        if (mArraySizeEditText.getText().toString() != null) {
-                            try {
-                                size = Integer.parseInt(mArraySizeEditText.getText().toString());
-                                array = new int[size];
-                                mGeneratedArrayTextView.setText(
-                                        "Sorted array of size " + size
-                                                + " is generated");
-                                break;
-                            } catch (NumberFormatException e) {
-                                mGeneratedArrayTextView.setText("Please enter a non zero number for size");
-                            }
+                        try {
+                            size = Integer.parseInt(mArraySizeEditText.getText().toString());
+                            mArray = GenerateArrays.getNaturalNumbersArray(size);
+                            mDupArray = new int[size];
+                            mGeneratedArrayTextView.setText(
+                                    "Sorted array of size " + size
+                                            + " is generated");
+                            break;
+                        } catch (NumberFormatException e) {
+                            mGeneratedArrayTextView.setText("Please enter a non zero number for size");
                         }
 
                     case R.id.btnAverageCase:
-                        if (mArraySizeEditText.getText().toString() != null) {
-                            try {
-                                size = Integer.parseInt(mArraySizeEditText.getText().toString());
-                                array = new int[size];
-                                mGeneratedArrayTextView.setText(
-                                        "Random array of size " + size
-                                                + " is generated");
-                                break;
-                            } catch (NumberFormatException e) {
-                                mGeneratedArrayTextView.setText("Please enter a non zero number for size");
-                            }
+                        try {
+                            size = Integer.parseInt(mArraySizeEditText.getText().toString());
+                            mArray = GenerateArrays.getRandomArray(size);
+                            mDupArray = new int[size];
+                            mGeneratedArrayTextView.setText(
+                                    "Random array of size " + size
+                                            + " is generated");
+                            break;
+                        } catch (NumberFormatException e) {
+                            mGeneratedArrayTextView.setText("Please enter a non zero number for size");
                         }
+
                     case R.id.btnWorstCase:
-                        if (mArraySizeEditText.getText().toString() != null) {
-                            try {
-                                size = Integer.parseInt(mArraySizeEditText.getText().toString());
-                                array = new int[size];
-                                mGeneratedArrayTextView.setText(
-                                        "Sorted array in descending order of size " + size
-                                                + " is generated");
-                                break;
-                            } catch (NumberFormatException e) {
-                                mGeneratedArrayTextView.setText("Please enter a non zero number for size");
-                            }
+                        try {
+                            size = Integer.parseInt(mArraySizeEditText.getText().toString());
+                            mArray = GenerateArrays.getReverseArray(size);
+                            mDupArray = new int[size];
+                            mGeneratedArrayTextView.setText(
+                                    "Sorted array in descending order of size " + size
+                                            + " is generated");
+                            break;
+                        } catch (NumberFormatException e) {
+                            mGeneratedArrayTextView.setText("Please enter a non zero number for size");
                         }
                 }
             }
         });
     }
+
+    public void assignListeners() {
+        mBubbleSortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bubbleSort();
+            }
+        });
+
+        mSelectionSortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectionSort();
+            }
+        });
+
+        mInsertionSortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                insertionSort();
+            }
+        });
+
+        mMergeSortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mergeSort();
+            }
+        });
+
+        mQuickSortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quickSort();
+            }
+        });
+
+        mBenchmarkAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bubbleSort();
+                selectionSort();
+                insertionSort();
+                mergeSort();
+                quickSort();
+            }
+        });
+
+        mStartOverBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startOver();
+            }
+        });
+    }
+
+    private void bubbleSort() {
+        GenerateArrays.initDupArray(mArray, mDupArray);
+        long time = SortingAlgos.bubbleSort(mDupArray);
+        mBubbleSortTextView.setText(time + "ms");
+    }
+
+    private void selectionSort () {
+        GenerateArrays.initDupArray(mArray, mDupArray);
+        long time = SortingAlgos.selectionSort(mDupArray);
+        mSelectionSortTextView.setText(time + "ms");
+    }
+
+    private void insertionSort() {
+        GenerateArrays.initDupArray(mArray, mDupArray);
+        long time = SortingAlgos.insertionSort(mDupArray);
+        mInsertionSortTextView.setText(time + "ms");
+    }
+
+    private void mergeSort() {
+        GenerateArrays.initDupArray(mArray, mDupArray);
+        long time = SortingAlgos.mergeSortHelper(mDupArray);
+        mMergeSortTextView.setText(time + "ms");
+    }
+
+    private void quickSort() {
+        GenerateArrays.initDupArray(mArray, mDupArray);
+        long time = SortingAlgos.quickSortHelper(mDupArray);
+        mQuickSortTextView.setText(time + "ms");
+    }
+
+    private void startOver() {
+        mArraySizeEditText.setText(String.valueOf(""));
+        size = 0;
+        mAlgorithmCaseGroup.clearCheck();
+        mAlgorithmCaseGroup.check(R.id.btnAverageCase);
+        mGeneratedArrayTextView.setText("");
+        mBubbleSortTextView.setText("");
+        mSelectionSortTextView.setText("");
+        mInsertionSortTextView.setText("");
+        mMergeSortTextView.setText("");
+        mQuickSortTextView.setText("");
+    }
+
+
 
 }
 
