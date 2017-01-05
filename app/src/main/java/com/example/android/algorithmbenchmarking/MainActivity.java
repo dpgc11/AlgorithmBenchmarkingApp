@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -177,33 +178,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void bubbleSort() {
-        GenerateArrays.initDupArray(mArray, mDupArray);
-        long time = SortingAlgos.bubbleSort(mDupArray);
-        mBubbleSortTextView.setText(time + "ms");
+        try {
+            GenerateArrays.initDupArray(mArray, mDupArray);
+            long time = SortingAlgos.bubbleSort(mDupArray);
+            mBubbleSortTextView.setText(time + "ms");
+        } catch (Exception e) {
+            Toast.makeText(this, "Please provide a non zero size for the array", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
-    private void selectionSort () {
-        GenerateArrays.initDupArray(mArray, mDupArray);
-        long time = SortingAlgos.selectionSort(mDupArray);
-        mSelectionSortTextView.setText(time + "ms");
+    private void selectionSort() {
+        try {
+            GenerateArrays.initDupArray(mArray, mDupArray);
+            long time = SortingAlgos.selectionSort(mDupArray);
+            mSelectionSortTextView.setText(time + "ms");
+        } catch (Exception e) {
+            Toast.makeText(this, "Please provide a non zero size for the array", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void insertionSort() {
-        GenerateArrays.initDupArray(mArray, mDupArray);
-        long time = SortingAlgos.insertionSort(mDupArray);
-        mInsertionSortTextView.setText(time + "ms");
+        try {
+            GenerateArrays.initDupArray(mArray, mDupArray);
+            long time = SortingAlgos.insertionSort(mDupArray);
+            mInsertionSortTextView.setText(time + "ms");
+        } catch (Exception e) {
+            Toast.makeText(this, "Please provide a non zero size for the array", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void mergeSort() {
-        GenerateArrays.initDupArray(mArray, mDupArray);
-        long time = SortingAlgos.mergeSortHelper(mDupArray);
-        mMergeSortTextView.setText(time + "ms");
+        try {
+            GenerateArrays.initDupArray(mArray, mDupArray);
+            long time = SortingAlgos.mergeSortHelper(mDupArray);
+            mMergeSortTextView.setText(time + "ms");
+        } catch (Exception e) {
+            Toast.makeText(this, "Please provide a non zero size for the array", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void quickSort() {
-        GenerateArrays.initDupArray(mArray, mDupArray);
-        long time = SortingAlgos.quickSortHelper(mDupArray);
-        mQuickSortTextView.setText(time + "ms");
+        try {
+            GenerateArrays.initDupArray(mArray, mDupArray);
+            long time = SortingAlgos.quickSortHelper(mDupArray);
+            mQuickSortTextView.setText(time + "ms");
+        } catch (Exception e) {
+            Toast.makeText(this, "Please provide a non zero size for the array", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void startOver() {
@@ -218,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
         mMergeSortTextView.setText("");
         mQuickSortTextView.setText("");
     }
-
 
 
 }
