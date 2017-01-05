@@ -231,6 +231,8 @@ public class MainActivity extends AppCompatActivity {
     private void startOver() {
         mArraySizeEditText.setText(String.valueOf(""));
         size = 0;
+        mArray = null;
+        mDupArray = null;
         mAlgorithmCaseGroup.clearCheck();
         mAlgorithmCaseGroup.check(R.id.btnAverageCase);
         mGeneratedArrayTextView.setText("");
